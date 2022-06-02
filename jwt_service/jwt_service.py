@@ -5,8 +5,8 @@ import jwt
 from fastapi import HTTPException, status
 from redis import Redis
 
-from dto import JWTPayloadDTO, JWTDTO, AccessTokenDTO
-from error_messages import ErrorMessages
+from .dto import JWTPayloadDTO, JWTDTO, AccessTokenDTO
+from .error_messages import ErrorMessages
 
 class JWTService:
 

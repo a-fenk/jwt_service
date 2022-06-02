@@ -61,7 +61,7 @@ class JWTService:
             )
         )
 
-    def decode_jwt(self, token):
+    def decode_jwt(self, token) -> JWTPayloadDTO:
         try:
             return self._decode_access_token(token)
 

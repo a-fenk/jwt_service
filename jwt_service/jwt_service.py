@@ -9,7 +9,6 @@ from .dto import JWTPayloadDTO, JWTDTO, AccessTokenDTO
 from .error_messages import ErrorMessages
 
 class JWTService:
-
     def __init__(
             self,
             secret: str,
@@ -113,3 +112,15 @@ class JWTService:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=ErrorMessages.INVALID_TOKEN,
         )
+
+    def invalidate_jwt(self, data: JWTDTO) -> None:
+        try:
+            self._decode_access_token(data.access_token)
+
+        except jwt.ExpiredSignatureError:
+            if self.__client.exists(data.refresh_token.bytes):
+                self.__client.delete(data.refresh_token.bytes)
+
+        except jwt.InvalidTokenError as e:
+            if self.__client.exists(data.refresh_token.bytes):
+                self.__client.delete(data.refresh_token.bytes)

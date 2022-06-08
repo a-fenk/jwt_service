@@ -14,9 +14,9 @@ setuptools.setup(
     url="https://gitlab.com/skipp1/S954_Skipp3_0/jwt",
     packages=setuptools.find_packages(),
     install_requires=[
-        "pydantic==1.9.1",
-        "PyJWT==2.4.0",
-        "typing_extensions==4.2.0",
+        'pydantic==1.9.0',
+        'PyJWT==2.4.0',
+        'typing_extensions==4.0.1',
     ],
     classifiers=[
         "Programming Language :: Python :: 3",

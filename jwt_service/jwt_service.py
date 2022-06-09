@@ -37,15 +37,15 @@ class JWTService:
     def _generate_refresh_token(self, user_id: UUID) -> UUID:
         token = uuid4()
 
-        while self.__client.exists(token.bytes):
-            if self.__client.get(token.bytes) == user_id:
-                self.__client.delete(token.bytes)
+        while self.__client.exists(token.hex):
+            if self.__client.get(token.hex) == user_id:
+                self.__client.delete(token.hex)
             else:
                 token = uuid4()
 
         self.__client.set(
-            name=token.bytes,
-            value=user_id.bytes,
+            name=token.hex,
+            value=user_id.hex,
             ex=timedelta(minutes=self.__refresh_token_expire_minutes)
         )
         return token
@@ -103,12 +103,12 @@ class JWTService:
             pass
 
         except jwt.InvalidTokenError:
-            if self.__client.exists(data.refresh_token.bytes):
-                self.__client.delete(data.refresh_token.bytes)
+            if self.__client.exists(data.refresh_token.hex):
+                self.__client.delete(data.refresh_token.hex)
 
         finally:
-            if self.__client.exists(data.refresh_token.bytes):
-                user_id = UUID(bytes=bytes(self.__client.get(data.refresh_token.bytes)))
+            if self.__client.exists(data.refresh_token.hex):
+                user_id = UUID(hex=self.__client.get(data.refresh_token.hex))
                 return self.generate_jwt(user_id)
 
         raise HTTPException(
@@ -121,9 +121,9 @@ class JWTService:
             self._decode_access_token(data.access_token)
 
         except jwt.ExpiredSignatureError:
-            if self.__client.exists(data.refresh_token.bytes):
-                self.__client.delete(data.refresh_token.bytes)
+            if self.__client.exists(data.refresh_token.hex):
+                self.__client.delete(data.refresh_token.hex)
 
         except jwt.InvalidTokenError as e:
-            if self.__client.exists(data.refresh_token.bytes):
-                self.__client.delete(data.refresh_token.bytes)
+            if self.__client.exists(data.refresh_token.hex):
+                self.__client.delete(data.refresh_token.hex)

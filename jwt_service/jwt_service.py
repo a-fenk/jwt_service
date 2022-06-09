@@ -101,7 +101,7 @@ class JWTService:
 
         except jwt.ExpiredSignatureError:
             if self.__client.exists(data.refresh_token.bytes):
-                user_id = UUID(bytes=self.__client.get(data.refresh_token.bytes))
+                user_id = UUID(bytes=bytes(self.__client.get(data.refresh_token.bytes)))
                 return self.generate_jwt(user_id)
 
         except jwt.InvalidTokenError as e:

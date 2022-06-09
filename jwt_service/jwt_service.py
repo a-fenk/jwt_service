@@ -100,13 +100,16 @@ class JWTService:
             self._decode_access_token(data.access_token)
 
         except jwt.ExpiredSignatureError:
+            pass
+
+        except jwt.InvalidTokenError:
+            if self.__client.exists(data.refresh_token.bytes):
+                self.__client.delete(data.refresh_token.bytes)
+
+        finally:
             if self.__client.exists(data.refresh_token.bytes):
                 user_id = UUID(bytes=bytes(self.__client.get(data.refresh_token.bytes)))
                 return self.generate_jwt(user_id)
-
-        except jwt.InvalidTokenError as e:
-            if self.__client.exists(data.refresh_token.bytes):
-                self.__client.delete(data.refresh_token.bytes)
 
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

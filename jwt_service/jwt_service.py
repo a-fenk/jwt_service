@@ -16,7 +16,7 @@ class JWTService:
             access_token_expire_minutes: int,
             refresh_token_expire_minutes: int,
             client: Redis,
-            access_token_prefix: str = 'bearer ',
+            access_token_prefix: str = 'Bearer ',
     ):
         self.__secret = secret
         self.__algorithm = algorithm

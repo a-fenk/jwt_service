@@ -52,8 +52,8 @@ class JWTService:
 
     def _decode_access_token(self, token: str) -> JWTPayloadDTO:
         token = token.removeprefix(self.__access_token_prefix)
-        return JWTPayloadDTO(
-            **jwt.decode(
+        return JWTPayloadDTO.parse_obj(
+            jwt.decode(
                 jwt=token,
                 key=self.__secret,
                 algorithms=[self.__algorithm],

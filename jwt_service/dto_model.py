@@ -1,8 +1,10 @@
-from pydantic import BaseModel
-from humps import camelize
+from pydantic import BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
 
 
 class DTOModel(BaseModel):
-    class Config:
-        populate_by_name = True
-        alias_generator = camelize
+    model_config = ConfigDict(
+        extra='forbid',
+        populate_by_name=True,
+        alias_generator=to_camel,
+    )
